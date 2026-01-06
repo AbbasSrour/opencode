@@ -79,6 +79,9 @@ import type {
   ProviderOauthAuthorizeResponses,
   ProviderOauthCallbackErrors,
   ProviderOauthCallbackResponses,
+  ProviderUsageAntigravityResponses,
+  ProviderUsageClaudeResponses,
+  ProviderUsageGeminiCliResponses,
   PtyConnectErrors,
   PtyConnectResponses,
   PtyCreateErrors,
@@ -2116,6 +2119,65 @@ export class Oauth extends HeyApiClient {
   }
 }
 
+export class Usage extends HeyApiClient {
+  /**
+   * Get Claude usage
+   *
+   * Get Claude Pro/Max usage limits
+   */
+  public claude<ThrowOnError extends boolean = false>(
+    parameters?: {
+      directory?: string
+    },
+    options?: Options<never, ThrowOnError>,
+  ) {
+    const params = buildClientParams([parameters], [{ args: [{ in: "query", key: "directory" }] }])
+    return (options?.client ?? this.client).get<ProviderUsageClaudeResponses, unknown, ThrowOnError>({
+      url: "/provider/usage/claude",
+      ...options,
+      ...params,
+    })
+  }
+
+  /**
+   * Get Antigravity usage
+   *
+   * Get Antigravity usage quotas
+   */
+  public antigravity<ThrowOnError extends boolean = false>(
+    parameters?: {
+      directory?: string
+    },
+    options?: Options<never, ThrowOnError>,
+  ) {
+    const params = buildClientParams([parameters], [{ args: [{ in: "query", key: "directory" }] }])
+    return (options?.client ?? this.client).get<ProviderUsageAntigravityResponses, unknown, ThrowOnError>({
+      url: "/provider/usage/antigravity",
+      ...options,
+      ...params,
+    })
+  }
+
+  /**
+   * Get Gemini CLI usage
+   *
+   * Get Gemini CLI usage quotas
+   */
+  public geminiCli<ThrowOnError extends boolean = false>(
+    parameters?: {
+      directory?: string
+    },
+    options?: Options<never, ThrowOnError>,
+  ) {
+    const params = buildClientParams([parameters], [{ args: [{ in: "query", key: "directory" }] }])
+    return (options?.client ?? this.client).get<ProviderUsageGeminiCliResponses, unknown, ThrowOnError>({
+      url: "/provider/usage/gemini-cli",
+      ...options,
+      ...params,
+    })
+  }
+}
+
 export class Provider extends HeyApiClient {
   /**
    * List providers
@@ -2158,6 +2220,11 @@ export class Provider extends HeyApiClient {
   private _oauth?: Oauth
   get oauth(): Oauth {
     return (this._oauth ??= new Oauth({ client: this.client }))
+  }
+
+  private _usage?: Usage
+  get usage(): Usage {
+    return (this._usage ??= new Usage({ client: this.client }))
   }
 }
 

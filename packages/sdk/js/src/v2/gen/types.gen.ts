@@ -1298,6 +1298,10 @@ export type KeybindsConfig = {
    */
   session_parent?: string
   /**
+   * Show quota usage
+   */
+  quota_view?: string
+  /**
    * Suspend terminal
    */
   terminal_suspend?: string
@@ -4979,6 +4983,94 @@ export type FormatterStatusResponses = {
 }
 
 export type FormatterStatusResponse = FormatterStatusResponses[keyof FormatterStatusResponses]
+
+export type ProviderUsageClaudeData = {
+  body?: never
+  path?: never
+  query?: {
+    directory?: string
+  }
+  url: "/provider/usage/claude"
+}
+
+export type ProviderUsageClaudeResponses = {
+  /**
+   * Claude usage data
+   */
+  200: {
+    status: "success" | "not_authenticated" | "error"
+    message?: string
+    five_hour?: {
+      utilization: number
+      resets_at: string | null
+    } | null
+    seven_day?: {
+      utilization: number
+      resets_at: string | null
+    } | null
+  }
+}
+
+export type ProviderUsageClaudeResponse = ProviderUsageClaudeResponses[keyof ProviderUsageClaudeResponses]
+
+export type ProviderUsageAntigravityData = {
+  body?: never
+  path?: never
+  query?: {
+    directory?: string
+  }
+  url: "/provider/usage/antigravity"
+}
+
+export type ProviderUsageAntigravityResponses = {
+  /**
+   * Antigravity usage data
+   */
+  200: {
+    status: "success" | "not_configured" | "error"
+    message?: string
+    groups?: Array<{
+      name: string
+      display: string
+      used: number
+      max: number
+      remaining: number
+      reset_time_iso?: string | null
+    }>
+  }
+}
+
+export type ProviderUsageAntigravityResponse =
+  ProviderUsageAntigravityResponses[keyof ProviderUsageAntigravityResponses]
+
+export type ProviderUsageGeminiCliData = {
+  body?: never
+  path?: never
+  query?: {
+    directory?: string
+  }
+  url: "/provider/usage/gemini-cli"
+}
+
+export type ProviderUsageGeminiCliResponses = {
+  /**
+   * Gemini CLI usage data
+   */
+  200: {
+    status: "success" | "not_configured" | "error"
+    message?: string
+    groups?: Array<{
+      name: string
+      display: string
+      used: number
+      max: number
+      remaining: number
+      reset_time_iso?: string | null
+    }>
+  }
+}
+
+export type ProviderUsageGeminiCliResponse = ProviderUsageGeminiCliResponses[keyof ProviderUsageGeminiCliResponses]
 
 export type EventSubscribeData = {
   body?: never
