@@ -68,6 +68,7 @@ import { usePromptRef } from "../../context/prompt"
 import { useExit } from "../../context/exit"
 import { Filesystem } from "@/util/filesystem"
 import { PermissionPrompt } from "./permission"
+import { QuotaPrompt } from "./quota"
 import { DialogExportOptions } from "../../ui/dialog-export-options"
 import { formatTranscript } from "../../util/transcript"
 
@@ -140,6 +141,7 @@ export function Session() {
   const [showScrollbar, setShowScrollbar] = createSignal(kv.get("scrollbar_visible", false))
   const [diffWrapMode, setDiffWrapMode] = createSignal<"word" | "none">("word")
   const [animationsEnabled, setAnimationsEnabled] = createSignal(kv.get("animations_enabled", true))
+  const [quotaVisible, setQuotaVisible] = createSignal(false)
 
   const wide = createMemo(() => dimensions().width > 120)
   const sidebarVisible = createMemo(() => {
@@ -553,6 +555,16 @@ export function Session() {
           kv.set("animations_enabled", next)
           return next
         })
+        dialog.clear()
+      },
+    },
+    {
+      title: "Show quota",
+      value: "session.quota",
+      keybind: "quota_view",
+      category: "Session",
+      onSelect: (dialog) => {
+        setQuotaVisible(true)
         dialog.clear()
       },
     },
@@ -1033,16 +1045,19 @@ export function Session() {
               </For>
             </scrollbox>
             <box flexShrink={0}>
+              <Show when={quotaVisible()}>
+                <QuotaPrompt onClose={() => setQuotaVisible(false)} />
+              </Show>
               <Show when={permissions().length > 0}>
                 <PermissionPrompt request={permissions()[0]} />
               </Show>
               <Prompt
-                visible={!session()?.parentID && permissions().length === 0}
+                visible={!session()?.parentID && permissions().length === 0 && !quotaVisible()}
                 ref={(r) => {
                   prompt = r
                   promptRef.set(r)
                 }}
-                disabled={permissions().length > 0}
+                disabled={permissions().length > 0 || quotaVisible()}
                 onSubmit={() => {
                   toBottom()
                 }}

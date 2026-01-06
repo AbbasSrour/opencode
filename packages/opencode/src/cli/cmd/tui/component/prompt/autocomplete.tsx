@@ -363,6 +363,11 @@ export function Autocomplete(props: {
           description: "toggle thinking visibility",
           onSelect: () => command.trigger("session.toggle.thinking"),
         },
+        {
+          display: "/quota",
+          description: "show antigravity quota usage",
+          onSelect: () => command.trigger("session.quota"),
+        },
       )
       if (sync.data.config.share !== "disabled") {
         results.push({

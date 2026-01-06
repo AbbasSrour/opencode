@@ -29,6 +29,7 @@ import { Command } from "../command"
 import { ProviderAuth } from "../provider/auth"
 import { Global } from "../global"
 import { ProjectRoute } from "./project"
+import { UsageRoute } from "./usage"
 import { ToolRegistry } from "../tool/registry"
 import { zodToJsonSchema } from "zod-to-json-schema"
 import { SessionPrompt } from "../session/prompt"
@@ -2714,6 +2715,7 @@ export namespace Server {
         },
       )
       .route("/tui/control", TuiRoute)
+      .route("/provider/usage", UsageRoute)
       .put(
         "/auth/:providerID",
         describeRoute({
