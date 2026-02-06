@@ -99,6 +99,68 @@ export namespace Provider {
         },
       }
     },
+    async "nano-gpt"(input) {
+      const key = await iife(async () => {
+        const env = Env.all()
+        const envKey = input.env.map((item) => env[item]).find(Boolean)
+        if (envKey) return envKey
+        const auth = await Auth.get(input.id)
+        if (auth?.type === "api") return auth.key
+        const config = await Config.get()
+        const configKey = config.provider?.[input.id]?.options?.apiKey
+        if (typeof configKey === "string" && configKey.length > 0) return configKey
+        return undefined
+      })
+
+      if (!key) return { autoload: false }
+
+      const seed = Object.values(input.models)[0]
+      if (!seed) return { autoload: true }
+
+      const base = String(input.options.baseURL ?? seed.api.url ?? "").replace(/\/+$/, "")
+      if (!base) return { autoload: true }
+
+      const body = await fetch(`${base}/models`, {
+        headers: {
+          Authorization: `Bearer ${key}`,
+        },
+        signal: AbortSignal.timeout(5 * 1000),
+      })
+        .then((x) => (x.ok ? x.json() : undefined))
+        .catch(() => undefined)
+
+      const ids = Array.isArray(body?.data)
+        ? body.data.flatMap((item: unknown) => {
+            if (!item || typeof item !== "object") return []
+            if (!("id" in item)) return []
+            return typeof item.id === "string" ? [item.id] : []
+          })
+        : []
+
+      for (const id of ids) {
+        if (input.models[id]) continue
+        const reasoning = id.toLowerCase().includes("thinking")
+        input.models[id] = {
+          ...seed,
+          id,
+          name: id,
+          api: {
+            ...seed.api,
+            id,
+            url: base,
+          },
+          capabilities: {
+            ...seed.capabilities,
+            reasoning,
+          },
+          variants: {},
+        }
+      }
+
+      return {
+        autoload: true,
+      }
+    },
     async opencode(input) {
       const hasKey = await (async () => {
         const env = Env.all()
