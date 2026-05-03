@@ -202,6 +202,12 @@ const createPlatform = (): Platform => {
       window.history.forward()
     },
 
+    minimizeWindow: () => window.api.minimizeWindow(),
+
+    toggleMaximizeWindow: () => window.api.toggleMaximizeWindow(),
+
+    closeWindow: () => window.api.closeWindow(),
+
     storage,
 
     checkUpdate: async () => {

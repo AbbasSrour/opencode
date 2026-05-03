@@ -190,6 +190,23 @@ export function registerIpcHandlers(deps: Deps) {
     win?.show()
   })
 
+  ipcMain.handle("minimize-window", (event: IpcMainInvokeEvent) => {
+    const win = BrowserWindow.fromWebContents(event.sender)
+    win?.minimize()
+  })
+
+  ipcMain.handle("toggle-maximize-window", (event: IpcMainInvokeEvent) => {
+    const win = BrowserWindow.fromWebContents(event.sender)
+    if (!win) return
+    if (win.isMaximized()) return win.unmaximize()
+    win.maximize()
+  })
+
+  ipcMain.handle("close-window", (event: IpcMainInvokeEvent) => {
+    const win = BrowserWindow.fromWebContents(event.sender)
+    win?.close()
+  })
+
   ipcMain.on("relaunch", () => {
     app.relaunch()
     app.exit(0)

@@ -522,6 +522,31 @@ export function Titlebar(props: { update?: TitlebarUpdate }) {
                 <Show when={windows() && !electronWindows()}>
                   <div data-tauri-decorum-tb class="flex flex-row" />
                 </Show>
+                <Show when={linux()}>
+                  <div class="ml-2 flex shrink-0 items-center gap-0" aria-label="Window controls">
+                    <IconButtonV2
+                      variant="ghost-muted"
+                      size="small"
+                      icon={<IconV2 name="dash" />}
+                      onClick={() => platform.minimizeWindow?.()}
+                      aria-label="Minimize window"
+                    />
+                    <IconButtonV2
+                      variant="ghost-muted"
+                      size="small"
+                      icon={<IconV2 name="expand" />}
+                      onClick={() => platform.toggleMaximizeWindow?.()}
+                      aria-label="Maximize window"
+                    />
+                    <IconButtonV2
+                      variant="ghost-muted"
+                      size="small"
+                      icon={<IconV2 name="close" />}
+                      onClick={() => platform.closeWindow?.()}
+                      aria-label={language.t("common.close")}
+                    />
+                  </div>
+                </Show>
               </div>
             )
           }}
@@ -673,6 +698,31 @@ export function Titlebar(props: { update?: TitlebarUpdate }) {
               onMouseDown={drag}
             >
               <div id="opencode-titlebar-right" class="flex items-center gap-1 shrink-0 justify-end" />
+              <Show when={linux()}>
+                <div class="ml-2 flex shrink-0 items-center gap-0" aria-label="Window controls">
+                  <IconButton
+                    icon="dash"
+                    variant="ghost"
+                    class="titlebar-icon w-8 h-6 p-0 box-border shrink-0"
+                    onClick={() => platform.minimizeWindow?.()}
+                    aria-label="Minimize window"
+                  />
+                  <IconButton
+                    icon="expand"
+                    variant="ghost"
+                    class="titlebar-icon w-8 h-6 p-0 box-border shrink-0"
+                    onClick={() => platform.toggleMaximizeWindow?.()}
+                    aria-label="Maximize window"
+                  />
+                  <IconButton
+                    icon="close"
+                    variant="ghost"
+                    class="titlebar-icon w-8 h-6 p-0 box-border shrink-0"
+                    onClick={() => platform.closeWindow?.()}
+                    aria-label={language.t("common.close")}
+                  />
+                </div>
+              </Show>
               <Show when={windows()}>
                 {!tauriApi() && <div class="shrink-0" style={{ width: windowsControlsWidth() }} />}
                 <div data-tauri-decorum-tb class="flex flex-row" />

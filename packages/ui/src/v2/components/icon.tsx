@@ -41,6 +41,22 @@ const icons = {
     viewBox: "0 0 16 16",
     body: `<path d="M8 2.88867V13.1109" stroke="currentColor" stroke-linejoin="round"/><path d="M2.88867 8H13.1109" stroke="currentColor" stroke-linejoin="round"/>`,
   },
+  close: {
+    viewBox: "0 0 20 20",
+    path: () => (
+      <path d="M3.75 3.75L16.25 16.25M16.25 3.75L3.75 16.25" stroke="currentColor" stroke-linecap="square" />
+    ),
+  },
+  dash: {
+    viewBox: "0 0 20 20",
+    path: () => <rect x="5" y="9.5" width="10" height="1" fill="currentColor" />,
+  },
+  expand: {
+    viewBox: "0 0 20 20",
+    path: () => (
+      <path d="M4.58301 10.4163V15.4163H9.58301M10.4163 4.58301H15.4163V9.58301" stroke="currentColor" stroke-linecap="square" />
+    ),
+  },
   "settings-gear": {
     viewBox: "0 0 20 20",
     body: `<path d="M7.62516 4.46094L5.05225 3.86719L3.86475 5.05469L4.4585 7.6276L2.0835 9.21094V10.7943L4.4585 12.3776L3.86475 14.9505L5.05225 16.138L7.62516 15.5443L9.2085 17.9193H10.7918L12.3752 15.5443L14.9481 16.138L16.1356 14.9505L15.5418 12.3776L17.9168 10.7943V9.21094L15.5418 7.6276L16.1356 5.05469L14.9481 3.86719L12.3752 4.46094L10.7918 2.08594H9.2085L7.62516 4.46094Z" stroke="currentColor"/><path d="M12.5002 10.0026C12.5002 11.3833 11.3809 12.5026 10.0002 12.5026C8.61945 12.5026 7.50016 11.3833 7.50016 10.0026C7.50016 8.62189 8.61945 7.5026 10.0002 7.5026C11.3809 7.5026 12.5002 8.62189 12.5002 10.0026Z" stroke="currentColor"/>`,
@@ -79,10 +95,10 @@ function ensureSprite() {
   svg.style.position = "absolute"
   svg.style.overflow = "hidden"
   svg.innerHTML = Object.entries(icons)
-    .map(
-      ([name, icon]) =>
-        `<symbol id="${symbol(name as keyof typeof icons)}" viewBox="${icon.viewBox}">${icon.body}</symbol>`,
-    )
+    .map(([name, icon]) => {
+      const content = "body" in icon ? icon.body : ""
+      return `<symbol id="${symbol(name as keyof typeof icons)}" viewBox="${icon.viewBox}">${content}</symbol>`
+    })
     .join("")
   document.body.insertBefore(svg, document.body.firstChild)
   spriteInserted = true

@@ -45,6 +45,15 @@ export type Platform = {
   /** Navigate forward in history */
   forward(): void
 
+  /** Minimize the desktop window */
+  minimizeWindow?(): Promise<void>
+
+  /** Toggle maximize state for the desktop window */
+  toggleMaximizeWindow?(): Promise<void>
+
+  /** Close the desktop window */
+  closeWindow?(): Promise<void>
+
   /** Send a system notification (optional deep link) */
   notify(title: string, description?: string, href?: string): Promise<void>
 

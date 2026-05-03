@@ -147,6 +147,7 @@ export function createMainWindow() {
           titleBarOverlay: overlay({ mode }),
         }
       : {}),
+    ...(process.platform === "linux" ? { frame: false } : {}),
     webPreferences: {
       preload: join(root, "../preload/index.js"),
       contextIsolation: true,
